@@ -3,7 +3,12 @@ from marshmallow import Schema, fields
 class WalletSchema(Schema):
     balance = fields.Decimal(as_string=True, dump_only=True)
     savings_balance = fields.Decimal(as_string=True, dump_only=True)
-    currency = fields.String(dump_only=True)
+    currency = fields.Method("get_currency", dump_only=True)
+
+    def get_currency(self, obj):
+        from app.models.admin_settings import AdminSettings
+        settings = AdminSettings.query.first()
+        return settings.default_currency if settings and settings.default_currency else obj.currency
 
 class UserWithdrawalSettingsSchema(Schema):
     withdrawal_fee = fields.Decimal(as_string=True, dump_only=True)
