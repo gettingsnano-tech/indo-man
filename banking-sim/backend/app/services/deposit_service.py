@@ -17,6 +17,10 @@ class DepositService:
         deposit = Deposit(user_id=user_id, amount=amount, proof=proof)
         db.session.add(deposit)
         db.session.commit()
+        
+        from app.utils.email_service import EmailService
+        EmailService.send_deposit_notification(user, amount, 'pending')
+        
         return deposit
         
     @staticmethod
@@ -37,6 +41,11 @@ class DepositService:
             reference_id=deposit.id
         )
         db.session.commit()
+        
+        user = User.query.get(deposit.user_id)
+        from app.utils.email_service import EmailService
+        EmailService.send_deposit_notification(user, deposit.amount, 'approved')
+        
         return deposit
 
     @staticmethod
@@ -48,4 +57,9 @@ class DepositService:
         deposit.status = 'rejected'
         deposit.admin_message = admin_message
         db.session.commit()
+        
+        user = User.query.get(deposit.user_id)
+        from app.utils.email_service import EmailService
+        EmailService.send_deposit_notification(user, deposit.amount, 'rejected')
+        
         return deposit

@@ -69,6 +69,11 @@ def login():
         return jsonify({"error": "Account disabled"}), 403
         
     access_token = create_access_token(identity=str(user.id))
+    
+    # Send login alert asynchronously
+    from app.utils.email_service import EmailService
+    EmailService.send_login_alert(user)
+    
     return jsonify({
         "token": access_token,
         "user": user_schema.dump(user)

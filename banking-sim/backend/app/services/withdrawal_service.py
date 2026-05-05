@@ -49,6 +49,10 @@ class WithdrawalService:
         # (For simplicity, omitted updating the exact reference_id in transaction, but it's fine)
         
         db.session.commit()
+        
+        from app.utils.email_service import EmailService
+        EmailService.send_withdrawal_notification(user, withdrawal.amount, 'pending')
+        
         return withdrawal
 
     @staticmethod
@@ -91,10 +95,11 @@ class WithdrawalService:
             withdrawal.is_paid = True
             withdrawal.status = 'paid' # Force status to paid if is_paid is True
             
-        # Simulate Email Notification
+        # Email Notification
         user = User.query.get(withdrawal.user_id)
         if user:
-            print(f"📧 EMAIL SENT TO {user.email}: Withdrawal status updated to {status.upper()}. Message: {admin_message}")
+            from app.utils.email_service import EmailService
+            EmailService.send_withdrawal_notification(user, withdrawal.amount, status, admin_message)
             
         db.session.commit()
         return withdrawal

@@ -72,6 +72,13 @@ def send_message(id):
     db.session.add(msg)
     db.session.commit()
     
+    if user.is_admin:
+        ticket_owner = db.session.get(User, ticket.user_id)
+        if ticket_owner:
+            from app.utils.email_service import EmailService
+            EmailService.send_support_notification(ticket_owner, ticket.subject, message_text)
+            
+    
     return jsonify(SupportMessageSchema().dump(msg)), 201
 
 # Admin Routes
