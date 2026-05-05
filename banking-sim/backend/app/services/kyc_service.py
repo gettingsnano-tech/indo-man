@@ -18,8 +18,7 @@ class KYCService:
         kyc.status = 'pending'
         kyc.submitted_at = datetime.now(timezone.utc)
         
-        import uuid
-        user = User.query.get(uuid.UUID(user_id))
+        user = db.session.get(User, user_id)
         user.kyc_status = 'pending'
         
         db.session.commit()
@@ -35,8 +34,7 @@ class KYCService:
         kyc.admin_note = admin_note
         kyc.reviewed_at = datetime.now(timezone.utc)
         
-        import uuid
-        user = User.query.get(uuid.UUID(user_id))
+        user = db.session.get(User, user_id)
         user.kyc_status = status
         
         db.session.commit()

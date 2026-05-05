@@ -41,8 +41,8 @@ def get_user_tickets():
 def get_ticket(id):
     ticket = SupportTicket.query.get_or_404(id)
     # Check if user owns ticket or is admin
-    user_id = get_jwt_identity()
-    user = User.query.get(user_id)
+    user_id = str(get_jwt_identity())
+    user = db.session.get(User, user_id)
     if not user.is_admin and str(ticket.user_id) != user_id:
         return jsonify({"error": "Unauthorized"}), 403
         
@@ -52,9 +52,8 @@ def get_ticket(id):
 @jwt_required()
 def send_message(id):
     ticket = SupportTicket.query.get_or_404(id)
-    user_id = get_jwt_identity()
-    import uuid
-    user = User.query.get(uuid.UUID(user_id))
+    user_id = str(get_jwt_identity())
+    user = db.session.get(User, user_id)
     
     if not user.is_admin and str(ticket.user_id) != user_id:
         return jsonify({"error": "Unauthorized"}), 403
