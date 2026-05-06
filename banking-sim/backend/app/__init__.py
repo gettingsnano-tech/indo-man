@@ -21,9 +21,7 @@ def create_app():
     app.config.from_object(Config)
     
     # Initialize extensions
-    frontend_url = os.environ.get('FRONTEND_URL', 'http://localhost:5173,http://127.0.0.1:5173,http://localhost:3000,http://127.0.0.1:3000')
-    origins = [url.strip() for url in frontend_url.split(',')]
-    CORS(app, resources={r"/api/*": {"origins": origins}}, supports_credentials=True)
+    CORS(app, origins=[os.getenv('FRONTEND_URL', '*')], supports_credentials=True)
     db.init_app(app)
     migrate.init_app(app, db)
     jwt.init_app(app)
