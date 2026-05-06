@@ -25,6 +25,21 @@ export default function Settings() {
         setSettings({ ...settings, [e.target.name]: e.target.value });
     };
 
+    const handleLogoUpload = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            if (file.size > 2 * 1024 * 1024) {
+                alert("Logo must be less than 2MB");
+                return;
+            }
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setSettings({ ...settings, bank_logo: reader.result });
+            };
+            reader.readAsDataURL(file);
+        }
+    };
+
     const handleSave = async (e) => {
         e.preventDefault();
         setSuccess('');
@@ -57,6 +72,33 @@ export default function Settings() {
                         <Input label="Bank Phone" name="bank_phone" value={settings.bank_phone || ''} onChange={handleChange} />
                         <Input label="Bank Email" name="bank_email" value={settings.bank_email || ''} onChange={handleChange} />
                         <Input label="Customer Care" name="customer_care" value={settings.customer_care || ''} onChange={handleChange} />
+                        
+                        <div className="md:col-span-2 space-y-2 mt-2">
+                            <label className="text-sm font-medium text-gray-300 block mb-2">Bank Logo</label>
+                            <div className="flex items-center space-x-6">
+                                {settings.bank_logo ? (
+                                    <div className="relative group">
+                                        <img src={settings.bank_logo} alt="Current Logo" className="h-16 w-16 object-contain bg-white/5 rounded p-2" />
+                                        <button 
+                                            type="button"
+                                            onClick={() => setSettings({...settings, bank_logo: null})}
+                                            className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity text-xs"
+                                        >
+                                            ✕
+                                        </button>
+                                    </div>
+                                ) : (
+                                    <div className="h-16 w-16 bg-[#2563EB]/20 text-[#2563EB] rounded-lg flex items-center justify-center font-bold">
+                                        Logo
+                                    </div>
+                                )}
+                                <label className="cursor-pointer bg-[#1E1E2A] hover:bg-[#2A2A3A] transition-colors text-white px-4 py-2 rounded-lg text-sm border border-gray-700">
+                                    Upload New Logo
+                                    <input type="file" className="hidden" accept="image/png, image/jpeg, image/svg+xml" onChange={handleLogoUpload} />
+                                </label>
+                                <span className="text-xs text-gray-500">Max 2MB (PNG, JPG, SVG)</span>
+                            </div>
+                        </div>
                     </div>
                 </Card>
 

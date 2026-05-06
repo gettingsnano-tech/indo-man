@@ -195,6 +195,7 @@ def settings():
     if 'deposit_account_number' in data: s.deposit_account_number = data['deposit_account_number']
     if 'deposit_account_name' in data: s.deposit_account_name = data['deposit_account_name']
     if 'deposit_instructions' in data: s.deposit_instructions = data['deposit_instructions']
+    if 'bank_logo' in data: s.bank_logo = data['bank_logo']
     
     db.session.commit()
     return jsonify(AdminSettingsSchema().dump(s)), 200

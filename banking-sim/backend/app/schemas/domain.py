@@ -53,6 +53,7 @@ class AdminSettingsSchema(Schema):
     deposit_account_number = fields.String(allow_none=True)
     deposit_account_name = fields.String(allow_none=True)
     deposit_instructions = fields.String(allow_none=True)
+    bank_logo = fields.String(allow_none=True)
 
 class TransactionSchema(Schema):
     id = fields.String(dump_only=True)

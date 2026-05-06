@@ -21,7 +21,7 @@ def create_app():
     app.config.from_object(Config)
     
     # Initialize extensions
-    CORS(app, resources={r"/api/*": {"origins": ["http://localhost:5173", "http://127.0.0.1:5173"]}}, supports_credentials=True)
+    CORS(app, resources={r"/api/*": {"origins": ["http://localhost:5173", "http://127.0.0.1:5173", "http://localhost:3000", "http://127.0.0.1:3000"]}}, supports_credentials=True)
     db.init_app(app)
     migrate.init_app(app, db)
     jwt.init_app(app)
@@ -37,6 +37,7 @@ def create_app():
     from app.routes.atm import atm_bp
     from app.routes.support import support_bp
     from app.routes.account_number import account_bp
+    from app.routes.public import public_bp
     
     app.register_blueprint(auth_bp)
     app.register_blueprint(user_bp)
@@ -48,5 +49,6 @@ def create_app():
     app.register_blueprint(atm_bp)
     app.register_blueprint(support_bp)
     app.register_blueprint(account_bp)
+    app.register_blueprint(public_bp)
     
     return app

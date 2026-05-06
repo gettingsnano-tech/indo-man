@@ -17,4 +17,5 @@ class AdminSettings(db.Model):
     deposit_account_number = db.Column(db.String(100), nullable=True)
     deposit_account_name = db.Column(db.String(255), nullable=True)
     deposit_instructions = db.Column(db.Text, nullable=True)
+    bank_logo = db.Column(db.Text, nullable=True)
     updated_at = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))

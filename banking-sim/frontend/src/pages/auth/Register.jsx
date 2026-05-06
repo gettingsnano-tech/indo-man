@@ -3,8 +3,11 @@ import { useAuth } from '../../context/AuthContext';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button, Input, Card } from '../../components/ui';
 
+import { useBankSettings } from '../../context/BankSettingsContext';
+
 export default function Register() {
     const { register } = useAuth();
+    const { publicSettings } = useBankSettings();
     const navigate = useNavigate();
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
@@ -24,8 +27,17 @@ export default function Register() {
     return (
         <div className="min-h-screen flex items-center justify-center bg-[#0A0A0F] p-4">
             <Card className="w-full max-w-md p-8">
-                <h1 className="text-2xl font-display font-bold text-white mb-2">Create Account</h1>
-                <p className="text-gray-400 mb-6">Open your new secure vault today.</p>
+                <div className="flex flex-col items-center mb-6">
+                    {publicSettings.bank_logo ? (
+                        <img src={publicSettings.bank_logo} alt="Bank Logo" className="h-16 mb-4 object-contain" />
+                    ) : (
+                        <div className="h-16 w-16 bg-[#2563EB]/20 text-[#2563EB] rounded-2xl flex items-center justify-center mb-4 text-2xl font-bold">
+                            {publicSettings.bank_name.charAt(0)}
+                        </div>
+                    )}
+                    <h1 className="text-2xl font-display font-bold text-white text-center">Create {publicSettings.bank_name} Account</h1>
+                </div>
+                <p className="text-gray-400 mb-6 text-center">Open your new secure vault today.</p>
                 {error && <div className="bg-[#EF4444]/10 text-[#EF4444] p-3 rounded-lg mb-4 text-sm">{error}</div>}
                 <form onSubmit={handleSubmit} className="space-y-4">
                     <Input label="Full Name" type="text" value={name} onChange={e => setName(e.target.value)} required />
