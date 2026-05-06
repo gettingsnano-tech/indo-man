@@ -32,10 +32,10 @@ export default function Register() {
                         <img src={publicSettings.bank_logo} alt="Bank Logo" className="h-16 mb-4 object-contain" />
                     ) : (
                         <div className="h-16 w-16 bg-[#2563EB]/20 text-[#2563EB] rounded-2xl flex items-center justify-center mb-4 text-2xl font-bold">
-                            {publicSettings.bank_name.charAt(0)}
+                            {publicSettings?.bank_name?.charAt(0) || 'B'}
                         </div>
                     )}
-                    <h1 className="text-2xl font-display font-bold text-white text-center">Create {publicSettings.bank_name} Account</h1>
+                    <h1 className="text-2xl font-display font-bold text-white text-center">Create {publicSettings?.bank_name || 'Banking'} Account</h1>
                 </div>
                 <p className="text-gray-400 mb-6 text-center">Open your new secure vault today.</p>
                 {error && <div className="bg-[#EF4444]/10 text-[#EF4444] p-3 rounded-lg mb-4 text-sm">{error}</div>}

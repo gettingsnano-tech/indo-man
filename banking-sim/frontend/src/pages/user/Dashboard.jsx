@@ -172,7 +172,7 @@ export default function Dashboard() {
                                             "w-10 h-10 rounded-full flex items-center justify-center text-xs font-bold",
                                             tx.type?.includes('deposit') ? "bg-emerald-500/10 text-emerald-500" : "bg-red-500/10 text-red-500"
                                         )}>
-                                            {tx.type?.charAt(0).toUpperCase() || 'T'}
+                                            {tx.type?.charAt(0)?.toUpperCase() || 'T'}
                                         </div>
                                         <div>
                                             <p className="text-sm font-bold">{tx.description}</p>
@@ -181,9 +181,9 @@ export default function Dashboard() {
                                     </div>
                                     <p className={clsx(
                                         "text-sm font-bold",
-                                        tx.type.includes('deposit') ? "text-emerald-500" : "text-red-500"
+                                        tx.type?.includes('deposit') ? "text-emerald-500" : "text-red-500"
                                     )}>
-                                        {tx.type.includes('deposit') ? '+' : '-'}{currency} {tx.amount.toLocaleString()}
+                                        {tx.type?.includes('deposit') ? '+' : '-'}{currency} {tx.amount?.toLocaleString() || '0.00'}
                                     </p>
                                 </div>
                             ))

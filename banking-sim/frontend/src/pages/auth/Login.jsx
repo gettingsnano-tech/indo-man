@@ -35,10 +35,10 @@ export default function Login() {
                         <img src={publicSettings.bank_logo} alt="Bank Logo" className="h-16 mb-4 object-contain" />
                     ) : (
                         <div className="h-16 w-16 bg-[#2563EB]/20 text-[#2563EB] rounded-2xl flex items-center justify-center mb-4 text-2xl font-bold">
-                            {publicSettings.bank_name.charAt(0)}
+                            {publicSettings?.bank_name?.charAt(0) || 'B'}
                         </div>
                     )}
-                    <h1 className="text-2xl font-display font-bold text-white text-center">{publicSettings.bank_name}</h1>
+                    <h1 className="text-2xl font-display font-bold text-white text-center">{publicSettings?.bank_name || 'Banking Platform'}</h1>
                 </div>
                 <p className="text-gray-400 mb-6 text-center">Sign in to your vault to continue.</p>
                 {error && <div className="bg-[#EF4444]/10 text-[#EF4444] p-3 rounded-lg mb-4 text-sm">{error}</div>}
