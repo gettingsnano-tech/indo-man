@@ -23,7 +23,12 @@ app = create_app()
 def seed():
     with app.app_context():
         # Clean start: Recreate tables
-        db.drop_all()
+        print("Cleaning database...")
+        if 'postgresql' in app.config['SQLALCHEMY_DATABASE_URI']:
+            db.session.execute(db.text("DROP SCHEMA public CASCADE; CREATE SCHEMA public;"))
+            db.session.commit()
+        else:
+            db.drop_all()
         db.create_all()
 
         print("Tables recreated. Seeding data...")
