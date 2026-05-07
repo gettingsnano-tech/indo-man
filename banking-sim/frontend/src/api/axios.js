@@ -6,6 +6,9 @@ const cleanedBaseURL = rawBaseURL.replace(/['"]+/g, '').trim();
 
 const api = axios.create({
     baseURL: cleanedBaseURL,
+    headers: {
+        'Content-Type': 'application/json'
+    }
 });
 
 api.interceptors.request.use((config) => {
