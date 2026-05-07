@@ -7,15 +7,17 @@ from app.models.admin_settings import AdminSettings
 from app.models.user_withdrawal_settings import UserWithdrawalSettings
 from app.models.user_transfer_settings import UserTransferSettings
 from app.utils.auth import hash_password, verify_password
-from app.schemas.user import UserSchema
+from app.schemas.user import UserSchema, RegisterSchema
 
 auth_bp = Blueprint('auth', __name__, url_prefix='/api/auth')
 user_schema = UserSchema()
+register_schema = RegisterSchema()
+
 
 @auth_bp.route('/register', methods=['POST'])
 def register():
     data = request.get_json()
-    errors = user_schema.validate(data)
+    errors = register_schema.validate(data)
     if errors:
         return jsonify(errors), 400
         
