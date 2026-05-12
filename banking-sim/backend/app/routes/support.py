@@ -97,3 +97,24 @@ def admin_update_status(id):
         ticket.status = data['status']
     db.session.commit()
     return jsonify(SupportTicketSchema().dump(ticket)), 200
+@support_bp.route('/admin/tickets', methods=['POST'])
+@admin_required
+def admin_create_ticket():
+    data = request.get_json()
+    target_user_id = data.get('user_id')
+    subject = data.get('subject', 'Message from Administration')
+    message_text = data.get('message')
+    
+    if not target_user_id or not message_text:
+        return jsonify({"error": "User ID and message required"}), 400
+        
+    ticket = SupportTicket(user_id=target_user_id, subject=subject)
+    db.session.add(ticket)
+    db.session.flush()
+    
+    admin_id = get_jwt_identity()
+    msg = SupportMessage(ticket_id=ticket.id, sender_id=admin_id, message=message_text, is_admin=True)
+    db.session.add(msg)
+    db.session.commit()
+    
+    return jsonify(SupportTicketSchema().dump(ticket)), 201

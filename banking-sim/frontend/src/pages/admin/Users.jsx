@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import api from '../../api/axios';
 import { Card, Table, Badge, Button, Spinner, Input } from '../../components/ui';
-import { User, ShieldCheck, CreditCard, Lock, Unlock, Settings2, X, AlertTriangle } from 'lucide-react';
+import clsx from 'clsx';
+import { User, ShieldCheck, CreditCard, Lock, Unlock, Settings2, X, AlertTriangle, DollarSign, MessageCircle } from 'lucide-react';
 
 export default function Users() {
     const [users, setUsers] = useState([]);
@@ -15,6 +16,19 @@ export default function Users() {
         admin_reason: '',
         admin_instruction: '',
         withdrawal_fee: '0.00'
+    });
+
+    const [fundingUser, setFundingUser] = useState(null);
+    const [fundingData, setFundingData] = useState({
+        amount: '',
+        description: 'Admin Funding',
+        type: 'deposit'
+    });
+
+    const [messagingUser, setMessagingUser] = useState(null);
+    const [messageData, setMessageData] = useState({
+        subject: 'Message from Administration',
+        message: ''
     });
 
     const fetchUsers = async () => {
@@ -61,6 +75,45 @@ export default function Users() {
         } catch (err) {
             alert('Failed to save lifecycle settings');
         }
+    };
+
+    const handleFundUser = async () => {
+        if (!fundingData.amount || parseFloat(fundingData.amount) <= 0) {
+            alert("Please enter a valid amount");
+            return;
+        }
+        try {
+            await api.post(`/admin/fund-user/${fundingUser.id}`, fundingData);
+            setFundingUser(null);
+            setFundingData({ amount: '', description: 'Admin Funding', type: 'deposit' });
+            fetchUsers();
+        } catch (err) {
+            alert(err.response?.data?.error || "Failed to fund user");
+        }
+    };
+
+    const handleSendMessage = async () => {
+        if (!messageData.message.trim()) {
+            alert("Please enter a message");
+            return;
+        }
+        try {
+            await api.post('/support/admin/tickets', {
+                user_id: messagingUser.id,
+                subject: messageData.subject,
+                message: messageData.message
+            });
+            setMessagingUser(null);
+            setMessageData({ subject: 'Message from Administration', message: '' });
+            alert("Message sent successfully");
+            window.location.href = '/admin/support';
+        } catch (err) {
+            alert("Failed to send message");
+        }
+    };
+
+    const openMessage = (user) => {
+        setMessagingUser(user);
     };
 
     if (loading) return <div className="flex h-full items-center justify-center"><Spinner /></div>;
@@ -130,14 +183,34 @@ export default function Users() {
                                         size="sm"
                                         className="text-xs font-bold"
                                         onClick={() => openLifecycle(u)}
+                                        title="Lifecycle Settings"
                                     >
-                                        <Settings2 size={14} className="mr-2" /> Lifecycle
+                                        <Settings2 size={14} />
+                                    </Button>
+                                    <Button 
+                                        variant="success" 
+                                        size="sm"
+                                        className="text-xs font-bold"
+                                        onClick={() => setFundingUser(u)}
+                                        title="Fund Account"
+                                    >
+                                        <DollarSign size={14} />
+                                    </Button>
+                                    <Button 
+                                        variant="info" 
+                                        size="sm"
+                                        className="text-xs font-bold"
+                                        onClick={() => openMessage(u)}
+                                        title="Send Message"
+                                    >
+                                        <MessageCircle size={14} />
                                     </Button>
                                     <Button 
                                         variant={u.is_active ? 'danger' : 'success'} 
                                         size="sm"
                                         className="text-xs font-bold"
                                         onClick={() => toggleActive(u.id, u.is_active)}
+                                        title={u.is_active ? 'Disable Account' : 'Enable Account'}
                                     >
                                         {u.is_active ? <Lock size={14} /> : <Unlock size={14} />}
                                     </Button>
@@ -229,6 +302,131 @@ export default function Users() {
                                     Save User lifecycle
                                 </Button>
                                 <Button variant="ghost" className="px-8" onClick={() => setEditingLifecycle(null)}>
+                                    Cancel
+                                </Button>
+                            </div>
+                        </div>
+                    </Card>
+                </div>
+            )}
+
+            {/* Funding Modal Overlay */}
+            {fundingUser && (
+                <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in duration-300">
+                    <Card className="w-full max-w-md bg-[#0D0D14] border-[#1E1E2A] p-8 shadow-2xl relative">
+                        <button 
+                            onClick={() => setFundingUser(null)}
+                            className="absolute top-6 right-6 p-2 text-gray-500 hover:text-white hover:bg-white/5 rounded-lg transition-all"
+                        >
+                            <X size={20} />
+                        </button>
+
+                        <div className="flex items-center gap-4 mb-8">
+                            <div className="p-4 rounded-2xl bg-emerald-500/10 text-emerald-500">
+                                <DollarSign size={32} />
+                            </div>
+                            <div>
+                                <h3 className="text-xl font-bold text-white">Fund User Account</h3>
+                                <p className="text-sm text-gray-500">Adjust balance for <span className="text-white font-medium">{fundingUser.name}</span></p>
+                            </div>
+                        </div>
+
+                        <div className="space-y-6">
+                            <div className="space-y-1">
+                                <label className="text-xs font-bold text-gray-500 uppercase tracking-widest">Transaction Type</label>
+                                <div className="grid grid-cols-2 gap-2 p-1 bg-[#0A0A0F] border border-[#1E1E2A] rounded-xl">
+                                    <button 
+                                        onClick={() => setFundingData({...fundingData, type: 'deposit'})}
+                                        className={clsx(
+                                            "py-2 rounded-lg text-xs font-bold transition-all",
+                                            fundingData.type === 'deposit' ? "bg-emerald-500 text-white" : "text-gray-500 hover:text-gray-300"
+                                        )}
+                                    >
+                                        ADD FUNDS
+                                    </button>
+                                    <button 
+                                        onClick={() => setFundingData({...fundingData, type: 'withdrawal'})}
+                                        className={clsx(
+                                            "py-2 rounded-lg text-xs font-bold transition-all",
+                                            fundingData.type === 'withdrawal' ? "bg-red-500 text-white" : "text-gray-500 hover:text-gray-300"
+                                        )}
+                                    >
+                                        SUBTRACT FUNDS
+                                    </button>
+                                </div>
+                            </div>
+
+                            <Input 
+                                label="Amount" 
+                                type="number" 
+                                placeholder="0.00"
+                                value={fundingData.amount} 
+                                onChange={e => setFundingData({...fundingData, amount: e.target.value})} 
+                            />
+
+                            <Input 
+                                label="Description / Note" 
+                                value={fundingData.description} 
+                                onChange={e => setFundingData({...fundingData, description: e.target.value})} 
+                                placeholder="Reason for this adjustment"
+                            />
+
+                            <div className="pt-4 flex gap-3">
+                                <Button className="flex-1 py-4 text-sm font-bold" onClick={handleFundUser}>
+                                    Confirm Adjustment
+                                </Button>
+                                <Button variant="ghost" className="px-8" onClick={() => setFundingUser(null)}>
+                                    Cancel
+                                </Button>
+                            </div>
+                        </div>
+                    </Card>
+                </div>
+            )}
+
+            {/* Messaging Modal Overlay */}
+            {messagingUser && (
+                <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in duration-300">
+                    <Card className="w-full max-w-md bg-[#0D0D14] border-[#1E1E2A] p-8 shadow-2xl relative">
+                        <button 
+                            onClick={() => setMessagingUser(null)}
+                            className="absolute top-6 right-6 p-2 text-gray-500 hover:text-white hover:bg-white/5 rounded-lg transition-all"
+                        >
+                            <X size={20} />
+                        </button>
+
+                        <div className="flex items-center gap-4 mb-8">
+                            <div className="p-4 rounded-2xl bg-blue-500/10 text-blue-500">
+                                <MessageCircle size={32} />
+                            </div>
+                            <div>
+                                <h3 className="text-xl font-bold text-white">Message User</h3>
+                                <p className="text-sm text-gray-500">Start a conversation with <span className="text-white font-medium">{messagingUser.name}</span></p>
+                            </div>
+                        </div>
+
+                        <div className="space-y-6">
+                            <Input 
+                                label="Subject" 
+                                value={messageData.subject} 
+                                onChange={e => setMessageData({...messageData, subject: e.target.value})} 
+                            />
+
+                            <div className="space-y-1">
+                                <label className="text-xs font-bold text-gray-500 uppercase tracking-widest">Message</label>
+                                <textarea 
+                                    className="w-full bg-[#0A0A0F] border border-[#1E1E2A] rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-blue-500 h-32"
+                                    placeholder="Type your message here..."
+                                    value={messageData.message}
+                                    onChange={e => setMessageData({...messageData, message: e.target.value})}
+                                />
+                            </div>
+
+                            <div className="pt-4 flex gap-3">
+                                <Button className="flex-1 py-4 text-sm font-bold" onClick={handleSendMessage}>
+                                    Send Message
+                                </Button>
+                                <Button variant="ghost" className="px-8" onClick={() => setMessagingUser(null)}>
                                     Cancel
                                 </Button>
                             </div>

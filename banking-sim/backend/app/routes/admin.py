@@ -8,6 +8,7 @@ from app.models.kyc import KYC
 from app.models.admin_settings import AdminSettings
 from app.models.user_withdrawal_settings import UserWithdrawalSettings
 from app.models.user_transfer_settings import UserTransferSettings
+from app.models.transaction import Transaction
 from app.schemas.user import UserSchema
 from app.schemas.domain import DepositSchema, WithdrawalSchema, KYCSchema, AdminSettingsSchema
 from app.services.deposit_service import DepositService
@@ -199,3 +200,49 @@ def settings():
     
     db.session.commit()
     return jsonify(AdminSettingsSchema().dump(s)), 200
+
+@admin_bp.route('/fund-user/<id>', methods=['POST'])
+@admin_required
+def fund_user(id):
+    user = User.query.get(id)
+    if not user: return jsonify({"error": "User not found"}), 404
+    
+    data = request.get_json()
+    amount = data.get('amount')
+    description = data.get('description', 'Admin Funding')
+    type = data.get('type', 'deposit') # 'deposit' to add, 'withdrawal' to subtract
+    
+    if amount is None:
+        return jsonify({"error": "Amount required"}), 400
+        
+    try:
+        from decimal import Decimal
+        amount_dec = Decimal(str(amount))
+        
+        wallet = user.wallet
+        if not wallet:
+            return jsonify({"error": "User wallet not found"}), 404
+            
+        if type == 'deposit':
+            wallet.balance += amount_dec
+        else:
+            wallet.balance -= amount_dec
+            
+        # Record transaction
+        tx = Transaction(
+            user_id=user.id,
+            type=f'admin_{type}',
+            amount=amount_dec,
+            description=description
+        )
+        db.session.add(tx)
+        db.session.commit()
+        
+        return jsonify({
+            "message": "User account funded successfully",
+            "new_balance": str(wallet.balance)
+        }), 200
+        
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"error": str(e)}), 500

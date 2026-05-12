@@ -14,6 +14,7 @@ export default function KYC() {
     const [error, setError] = useState('');
     
     const [isCameraOpen, setIsCameraOpen] = useState(false);
+    const [facingMode, setFacingMode] = useState('environment'); // 'user' or 'environment'
     const [stream, setStream] = useState(null);
     const videoRef = useRef(null);
     const canvasRef = useRef(null);
@@ -42,14 +43,25 @@ export default function KYC() {
         }
     }, [isCameraOpen, stream]);
 
-    const startCamera = async () => {
+    const startCamera = async (mode = facingMode) => {
         try {
-            const s = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
+            // Stop existing stream if any
+            if (stream) stream.getTracks().forEach(t => t.stop());
+            
+            const s = await navigator.mediaDevices.getUserMedia({ 
+                video: { facingMode: mode } 
+            });
             setStream(s);
+            setFacingMode(mode);
             setIsCameraOpen(true);
         } catch (err) {
             setError('Could not access camera. Please check permissions.');
         }
+    };
+
+    const toggleCamera = () => {
+        const newMode = facingMode === 'user' ? 'environment' : 'user';
+        startCamera(newMode);
     };
 
     const stopCamera = () => {
@@ -211,6 +223,9 @@ export default function KYC() {
                                             <div className="absolute bottom-4 left-0 right-0 flex justify-center gap-4">
                                                 <Button size="sm" type="button" onClick={capturePhoto} className="rounded-full h-12 w-12 p-0 flex items-center justify-center">
                                                     <Camera size={24} />
+                                                </Button>
+                                                <Button size="sm" type="button" variant="outline" onClick={toggleCamera} className="rounded-full h-12 w-12 p-0 flex items-center justify-center bg-white/10 backdrop-blur-md border-white/20">
+                                                    <RefreshCw size={24} className="text-white" />
                                                 </Button>
                                                 <Button size="sm" type="button" variant="danger" onClick={stopCamera} className="rounded-full h-12 w-12 p-0 flex items-center justify-center">
                                                     <X size={24} />
