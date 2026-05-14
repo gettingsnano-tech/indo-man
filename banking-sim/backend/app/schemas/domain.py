@@ -32,6 +32,7 @@ class TransferSchema(Schema):
 
 class KYCSchema(Schema):
     id = fields.String(dump_only=True)
+    user_id = fields.String(dump_only=True)
     full_name = fields.String(required=True)
     id_type = fields.String(required=True)
     id_number = fields.String(required=True)
