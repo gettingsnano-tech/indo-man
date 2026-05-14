@@ -16,12 +16,12 @@ const Sidebar = ({ isOpen, onClose }) => {
     const userLinks = [
         { name: 'Dashboard', path: '/dashboard', icon: LayoutDashboard },
         { name: 'Deposit', path: '/deposit', icon: ArrowDownToLine },
-        { name: 'Withdrawal', path: '/withdrawal', icon: ArrowUpFromLine },
+        { name: 'Transfer to other Banks', path: '/withdrawal', icon: ArrowUpFromLine },
         { name: 'Transfer', path: '/transfer', icon: Send },
         { name: 'Transactions', path: '/transactions', icon: History },
         { name: 'KYC Verification', path: '/kyc', icon: ShieldCheck },
         { name: 'ATM Card', path: '/atm', icon: CreditCard },
-        { name: 'Support', path: '/support', icon: MessageSquare },
+        { name: 'Customer care', path: '/support', icon: MessageSquare },
         { name: 'Settings', path: '/settings', icon: Settings },
     ];
     
@@ -29,11 +29,11 @@ const Sidebar = ({ isOpen, onClose }) => {
         { name: 'Overview', path: '/admin/dashboard', icon: LayoutDashboard },
         { name: 'Users', path: '/admin/users', icon: Users },
         { name: 'Deposits', path: '/admin/deposits', icon: ArrowDownToLine },
-        { name: 'Withdrawals', path: '/admin/withdrawals', icon: ArrowUpFromLine },
+        { name: 'Transfer to other Banks', path: '/admin/withdrawals', icon: ArrowUpFromLine },
         { name: 'KYC Reviews', path: '/admin/kyc', icon: ShieldCheck },
         { name: 'ATM Applications', path: '/admin/atm', icon: CreditCard },
         { name: 'Account Pool', path: '/admin/accounts', icon: Landmark },
-        { name: 'Support Desk', path: '/admin/support', icon: MessageSquare },
+        { name: 'Customer care', path: '/admin/support', icon: MessageSquare },
         { name: 'Settings', path: '/admin/settings', icon: Settings },
     ];
     
