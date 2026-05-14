@@ -17,8 +17,15 @@ def submit_kyc():
     id_number = data.get('id_number')
     document_url = data.get('document_url')
     
-    kyc = KYCService.submit_kyc(user_id, full_name, id_type, id_number, document_url)
-    return jsonify(KYCSchema().dump(kyc)), 201
+    if not all([full_name, id_type, id_number, document_url]):
+        return jsonify({"error": "Missing required fields or document photo"}), 400
+        
+    try:
+        kyc = KYCService.submit_kyc(user_id, full_name, id_type, id_number, document_url)
+        return jsonify(KYCSchema().dump(kyc)), 201
+    except Exception as e:
+        print(f"KYC Submission Error: {str(e)}")
+        return jsonify({"error": "An error occurred while processing your request. Please try with a smaller image if possible."}), 500
 
 @kyc_bp.route('/status', methods=['GET'])
 @jwt_required()

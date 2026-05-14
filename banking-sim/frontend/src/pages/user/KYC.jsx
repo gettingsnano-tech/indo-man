@@ -77,7 +77,7 @@ export default function KYC() {
             canvas.width = video.videoWidth;
             canvas.height = video.videoHeight;
             canvas.getContext('2d').drawImage(video, 0, 0);
-            const dataUrl = canvas.toDataURL('image/jpeg');
+            const dataUrl = canvas.toDataURL('image/jpeg', 0.7); // Reduce quality to 70% to save space
             setDocumentUrl(dataUrl);
             stopCamera();
         }
@@ -86,6 +86,12 @@ export default function KYC() {
     const handleFileUpload = (e) => {
         const file = e.target.files[0];
         if (file) {
+            // Check file size (limit to 5MB)
+            if (file.size > 5 * 1024 * 1024) {
+                setError('File is too large. Please select an image smaller than 5MB.');
+                return;
+            }
+            
             const reader = new FileReader();
             reader.onloadend = () => {
                 setDocumentUrl(reader.result);
@@ -110,7 +116,11 @@ export default function KYC() {
             });
             fetchStatus();
         } catch (err) {
-            setError(err.response?.data?.error || 'Submission failed');
+            if (err.response?.status === 413) {
+                setError('The image file is too large for our server to process. Please try a smaller photo or lower resolution.');
+            } else {
+                setError(err.response?.data?.error || 'Submission failed. Please check your connection and try again.');
+            }
         }
     };
 

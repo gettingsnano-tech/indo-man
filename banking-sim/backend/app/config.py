@@ -13,3 +13,6 @@ class Config:
     
     JWT_SECRET_KEY = os.environ.get('JWT_SECRET_KEY', 'default-jwt-secret-key')
     JWT_ACCESS_TOKEN_EXPIRES = timedelta(hours=24)
+    
+    # Allow up to 10MB for base64 images in KYC
+    MAX_CONTENT_LENGTH = 10 * 1024 * 1024
