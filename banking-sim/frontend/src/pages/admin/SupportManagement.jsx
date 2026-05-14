@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from 'react';
 import api from '../../api/axios';
 import { Card, Input, Button, Spinner, Badge } from '../../components/ui';
-import { Send, MessageSquare, Clock, User, CheckCircle } from 'lucide-react';
+import { Send, MessageSquare, Clock, User, CheckCircle, ChevronLeft } from 'lucide-react';
 import clsx from 'clsx';
 
 export default function SupportManagement() {
@@ -67,9 +67,12 @@ export default function SupportManagement() {
     if (loading && tickets.length === 0) return <div className="flex h-full items-center justify-center"><Spinner /></div>;
 
     return (
-        <div className="max-w-7xl mx-auto h-[calc(100vh-160px)] flex gap-6">
+        <div className="max-w-7xl mx-auto h-[calc(100vh-160px)] flex flex-col lg:flex-row gap-4 lg:gap-6">
             {/* Ticket List */}
-            <div className="w-96 flex flex-col gap-4">
+            <div className={clsx(
+                "w-full lg:w-96 flex flex-col gap-4 h-full",
+                activeTicket && "hidden lg:flex"
+            )}>
                 <Card className="p-4 flex flex-col h-full bg-[#111118]">
                     <div className="mb-4">
                         <h3 className="text-xl font-bold">Support Management</h3>
@@ -106,12 +109,21 @@ export default function SupportManagement() {
             </div>
 
             {/* Chat View */}
-            <Card className="flex-1 flex flex-col bg-[#111118] overflow-hidden">
+            <Card className={clsx(
+                "flex-1 flex flex-col bg-[#111118] overflow-hidden h-full",
+                !activeTicket && "hidden lg:flex"
+            )}>
                 {activeTicket ? (
                     <>
-                        <div className="p-6 border-b border-[#1E1E2A] flex justify-between items-center bg-[#0D0D14]">
-                            <div className="flex items-center gap-4">
-                                <div className="w-10 h-10 rounded-full bg-[#2563EB]/20 flex items-center justify-center text-[#2563EB] font-bold">
+                        <div className="p-4 lg:p-6 border-b border-[#1E1E2A] flex justify-between items-center bg-[#0D0D14]">
+                            <div className="flex items-center gap-2 lg:gap-4">
+                                <button 
+                                    onClick={() => setActiveTicket(null)}
+                                    className="lg:hidden p-2 -ml-2 text-gray-400 hover:text-white"
+                                >
+                                    <ChevronLeft size={20} />
+                                </button>
+                                <div className="hidden sm:flex w-10 h-10 rounded-full bg-[#2563EB]/20 items-center justify-center text-[#2563EB] font-bold shrink-0">
                                     {activeTicket.user?.name[0]}
                                 </div>
                                 <div>
@@ -123,15 +135,15 @@ export default function SupportManagement() {
                                     </div>
                                 </div>
                             </div>
-                            <div className="flex gap-3">
+                            <div className="flex gap-2 lg:gap-3">
                                 <Button 
                                     variant={activeTicket.status === 'open' ? 'danger' : 'success'} 
                                     size="sm"
                                     onClick={toggleStatus}
-                                    className="flex items-center gap-2"
+                                    className="flex items-center gap-2 px-2 sm:px-3"
                                 >
                                     <CheckCircle size={16} />
-                                    {activeTicket.status === 'open' ? 'Close Ticket' : 'Re-open Ticket'}
+                                    <span className="hidden sm:inline">{activeTicket.status === 'open' ? 'Close' : 'Re-open'}</span>
                                 </Button>
                             </div>
                         </div>

@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from 'react';
 import api from '../../api/axios';
 import { Card, Input, Button, Spinner, Badge } from '../../components/ui';
-import { Send, MessageSquare, Clock } from 'lucide-react';
+import { Send, MessageSquare, Clock, ChevronLeft } from 'lucide-react';
 import clsx from 'clsx';
 
 export default function Support() {
@@ -12,6 +12,7 @@ export default function Support() {
     const [initialMsg, setInitialMsg] = useState('');
     const [loading, setLoading] = useState(true);
     const [sending, setSending] = useState(false);
+    const [isCreating, setIsCreating] = useState(false);
     const scrollRef = useRef(null);
 
     const fetchTickets = async () => {
@@ -75,9 +76,12 @@ export default function Support() {
     if (loading && tickets.length === 0) return <div className="flex h-full items-center justify-center"><Spinner /></div>;
 
     return (
-        <div className="max-w-6xl mx-auto h-[calc(100vh-160px)] flex gap-6">
+        <div className="max-w-6xl mx-auto h-[calc(100vh-160px)] flex flex-col lg:flex-row gap-4 lg:gap-6">
             {/* Sidebar: Tickets List */}
-            <div className="w-80 flex flex-col gap-4">
+            <div className={clsx(
+                "w-full lg:w-80 flex flex-col gap-4 h-full",
+                (activeTicket || isCreating) && "hidden lg:flex"
+            )}>
                 <Card className="p-4 flex flex-col h-full bg-[#111118]">
                     <div className="flex items-center justify-between mb-4">
                         <h3 className="font-bold flex items-center gap-2">
@@ -91,7 +95,10 @@ export default function Support() {
                         {tickets.map(t => (
                             <button
                                 key={t.id}
-                                onClick={() => setActiveTicket(t)}
+                                onClick={() => {
+                                    setActiveTicket(t);
+                                    setIsCreating(false);
+                                }}
                                 className={clsx(
                                     "w-full text-left p-3 rounded-lg border transition-all duration-200",
                                     activeTicket?.id === t.id 
@@ -117,7 +124,10 @@ export default function Support() {
                     <Button 
                         variant="secondary" 
                         className="mt-4 w-full"
-                        onClick={() => setActiveTicket(null)}
+                        onClick={() => {
+                            setActiveTicket(null);
+                            setIsCreating(true);
+                        }}
                     >
                         New Support Ticket
                     </Button>
@@ -125,13 +135,24 @@ export default function Support() {
             </div>
 
             {/* Main: Chat Area */}
-            <Card className="flex-1 flex flex-col bg-[#111118] overflow-hidden">
+            <Card className={clsx(
+                "flex-1 flex flex-col bg-[#111118] overflow-hidden h-full",
+                (!activeTicket && !isCreating) && "hidden lg:flex"
+            )}>
                 {activeTicket ? (
                     <>
                         <div className="p-4 border-b border-[#1E1E2A] flex justify-between items-center bg-[#0D0D14]">
-                            <div>
-                                <h3 className="font-bold text-lg">{activeTicket.subject}</h3>
-                                <p className="text-xs text-gray-500">Ticket ID: {activeTicket.id.split('-')[0]}</p>
+                            <div className="flex items-center gap-3">
+                                <button 
+                                    onClick={() => setActiveTicket(null)}
+                                    className="lg:hidden p-2 -ml-2 text-gray-400 hover:text-white"
+                                >
+                                    <ChevronLeft size={20} />
+                                </button>
+                                <div>
+                                    <h3 className="font-bold text-lg">{activeTicket.subject}</h3>
+                                    <p className="text-xs text-gray-500">Ticket ID: {activeTicket.id.split('-')[0]}</p>
+                                </div>
                             </div>
                             <Badge variant={activeTicket.status === 'open' ? 'success' : 'default'}>
                                 {activeTicket.status.toUpperCase()}
@@ -189,11 +210,18 @@ export default function Support() {
                         </form>
                     </>
                 ) : (
-                    <div className="flex-1 flex flex-col items-center justify-center p-8 text-center space-y-6">
-                        <div className="w-20 h-20 rounded-full bg-[#1E1E2A] flex items-center justify-center">
-                            <MessageSquare size={40} className="text-brand-500" />
-                        </div>
-                        <div className="max-w-md">
+                    <div className="flex-1 flex flex-col items-center justify-center p-6 text-center space-y-6 overflow-y-auto">
+                        <div className="relative w-full max-w-md">
+                            <button 
+                                onClick={() => setIsCreating(false)}
+                                className="lg:hidden absolute -top-12 -left-4 p-2 text-gray-400 hover:text-white flex items-center gap-1 text-sm"
+                            >
+                                <ChevronLeft size={18} />
+                                Back
+                            </button>
+                            <div className="w-16 h-16 rounded-full bg-[#1E1E2A] flex items-center justify-center mx-auto mb-6">
+                                <MessageSquare size={32} className="text-brand-500" />
+                            </div>
                             <h3 className="text-xl font-bold mb-2">How can we help you?</h3>
                             <p className="text-gray-400 text-sm mb-8">
                                 Describe your issue below and our support team will get back to you as soon as possible.
