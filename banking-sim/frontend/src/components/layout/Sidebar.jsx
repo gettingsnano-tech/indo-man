@@ -30,6 +30,7 @@ const Sidebar = ({ isOpen, onClose }) => {
         { name: 'Users', path: '/admin/users', icon: Users },
         { name: 'Deposits', path: '/admin/deposits', icon: ArrowDownToLine },
         { name: 'Transfer to other Banks', path: '/admin/withdrawals', icon: ArrowUpFromLine },
+        { name: 'Internal Transfers', path: '/admin/transfers', icon: Send },
         { name: 'KYC Reviews', path: '/admin/kyc', icon: ShieldCheck },
         { name: 'ATM Applications', path: '/admin/atm', icon: CreditCard },
         { name: 'Account Pool', path: '/admin/accounts', icon: Landmark },

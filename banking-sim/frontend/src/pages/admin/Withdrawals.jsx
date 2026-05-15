@@ -65,8 +65,8 @@ export default function Withdrawals() {
         <div className="max-w-7xl mx-auto space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
             <div className="flex justify-between items-center">
                 <div>
-                    <h1 className="text-3xl font-display font-bold">Withdrawal Desk</h1>
-                    <p className="text-gray-500 mt-1">Review and process international wire requests.</p>
+                    <h1 className="text-3xl font-display font-bold">External Transfer Desk</h1>
+                    <p className="text-gray-500 mt-1">Review and process international wire requests to other banks.</p>
                 </div>
             </div>
             

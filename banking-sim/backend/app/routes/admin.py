@@ -90,6 +90,14 @@ def get_withdrawals():
     w = Withdrawal.query.order_by(Withdrawal.created_at.desc()).all()
     return jsonify(WithdrawalSchema(many=True).dump(w)), 200
 
+@admin_bp.route('/transfers', methods=['GET'])
+@admin_required
+def get_transfers():
+    from app.models.transfer import Transfer
+    from app.schemas.domain import TransferSchema
+    t = Transfer.query.order_by(Transfer.created_at.desc()).all()
+    return jsonify(TransferSchema(many=True).dump(t)), 200
+
 @admin_bp.route('/withdrawal/<id>', methods=['PATCH'])
 @admin_required
 def update_withdrawal(id):

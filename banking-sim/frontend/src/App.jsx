@@ -19,6 +19,7 @@ import AdminDashboard from './pages/admin/Dashboard';
 import AdminUsers from './pages/admin/Users';
 import AdminDeposits from './pages/admin/Deposits';
 import AdminWithdrawals from './pages/admin/Withdrawals';
+import AdminTransfers from './pages/admin/Transfers';
 import AdminKYC from './pages/admin/KYC';
 import AdminSettings from './pages/admin/Settings';
 import ATMApplications from './pages/admin/ATMApplications';
@@ -55,6 +56,7 @@ function App() {
             <Route path="/admin/users" element={<ProtectedRoute requireAdmin><AdminUsers /></ProtectedRoute>} />
             <Route path="/admin/deposits" element={<ProtectedRoute requireAdmin><AdminDeposits /></ProtectedRoute>} />
             <Route path="/admin/withdrawals" element={<ProtectedRoute requireAdmin><AdminWithdrawals /></ProtectedRoute>} />
+            <Route path="/admin/transfers" element={<ProtectedRoute requireAdmin><AdminTransfers /></ProtectedRoute>} />
             <Route path="/admin/kyc" element={<ProtectedRoute requireAdmin><AdminKYC /></ProtectedRoute>} />
             <Route path="/admin/atm" element={<ProtectedRoute requireAdmin><ATMApplications /></ProtectedRoute>} />
             <Route path="/admin/settings" element={<ProtectedRoute requireAdmin><AdminSettings /></ProtectedRoute>} />

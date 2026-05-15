@@ -24,11 +24,20 @@ class WithdrawalSchema(Schema):
 
 class TransferSchema(Schema):
     id = fields.String(dump_only=True)
-    recipient_email = fields.Email(load_only=True, required=True)
+    sender_id = fields.String(dump_only=True)
+    recipient_id = fields.String(dump_only=True)
+    sender_email = fields.Method("get_sender_email", dump_only=True)
+    recipient_email = fields.Method("get_recipient_email", dump_only=True)
     amount = fields.Decimal(as_string=True, required=True)
     note = fields.String(allow_none=True)
     status = fields.String(dump_only=True)
     created_at = fields.DateTime(dump_only=True)
+
+    def get_sender_email(self, obj):
+        return obj.sender.email if obj.sender else None
+
+    def get_recipient_email(self, obj):
+        return obj.recipient.email if obj.recipient else None
 
 class KYCSchema(Schema):
     id = fields.String(dump_only=True)

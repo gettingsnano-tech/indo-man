@@ -201,7 +201,7 @@ export default function Dashboard() {
                         <div className="relative z-10">
                             <h3 className="text-lg font-bold mb-2">Secure Transfers</h3>
                             <p className="text-blue-100 text-xs mb-6">Send funds instantly to any account worldwide with our end-to-end encryption.</p>
-                            <Link to="/transfer">
+                            <Link to="/withdrawal">
                                 <Button variant="secondary" className="w-full bg-white text-[#2563EB] hover:bg-blue-50 border-none">
                                     Start Transfer
                                 </Button>

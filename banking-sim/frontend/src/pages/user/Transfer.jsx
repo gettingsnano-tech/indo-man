@@ -53,7 +53,7 @@ export default function Transfer() {
 
     return (
         <div className="max-w-5xl mx-auto space-y-6">
-            <h1 className="text-3xl font-display font-bold">Transfer Funds</h1>
+            <h1 className="text-3xl font-display font-bold">Internal Network Transfer</h1>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <Card className="p-6 bg-[#111118]">

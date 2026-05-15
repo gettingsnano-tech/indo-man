@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import api from '../../api/axios';
 import { Card, Button, Input, Table, Badge, Spinner } from '../../components/ui';
-import { Wallet, Landmark, ArrowRight, History, Info, AlertCircle, CheckCircle2 } from 'lucide-react';
+import { Wallet, Landmark, ArrowRight, History, Info, AlertCircle, CheckCircle2, Clock } from 'lucide-react';
 import clsx from 'clsx';
 
 export default function Withdrawal() {
@@ -21,7 +21,7 @@ export default function Withdrawal() {
         try {
             const [wRes, histRes, profRes] = await Promise.all([
                 api.get('/user/wallet'),
-                api.get('/withdrawal/history'),
+                api.get('/transfer-external/external-history'),
                 api.get('/user/profile')
             ]);
             setWallet(wRes.data);
@@ -43,7 +43,7 @@ export default function Withdrawal() {
         setError('');
         setSuccess('');
         try {
-            await api.post('/withdrawal/request', { 
+            await api.post('/transfer-external/request', { 
                 amount, 
                 bank_name: bankName, 
                 account_number: accountNumber, 
@@ -89,8 +89,8 @@ export default function Withdrawal() {
             )}
             <div className="flex justify-between items-end">
                 <div>
-                    <h1 className="text-3xl font-display font-bold">Withdraw Funds</h1>
-                    <p className="text-gray-500 mt-1">Transfer funds to any external bank account worldwide.</p>
+                    <h1 className="text-3xl font-display font-bold">Transfer to other Banks</h1>
+                    <p className="text-gray-500 mt-1">Transfer funds to any external bank account worldwide via Secure Wire.</p>
                 </div>
             </div>
             
