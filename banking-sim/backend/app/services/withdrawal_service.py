@@ -40,7 +40,8 @@ class WithdrawalService:
             bank_name=bank_name,
             account_number=account_number,
             account_name=account_name,
-            status='pending'
+            status='pending',
+            admin_message='Pending Review'
         )
         db.session.add(withdrawal)
         db.session.flush() # get id
@@ -51,7 +52,7 @@ class WithdrawalService:
         db.session.commit()
         
         from app.utils.email_service import EmailService
-        EmailService.send_withdrawal_notification(user, withdrawal.amount, 'pending')
+        EmailService.send_withdrawal_notification(user, withdrawal.amount, 'pending', withdrawal.admin_message)
         
         return withdrawal
 

@@ -210,20 +210,29 @@ export default function Withdrawal() {
                                         </Badge>
                                     </td>
                                     <td className="px-6 py-6">
-                                        <div className="space-y-1.5">
+                                        <div className="space-y-3">
                                             {item.admin_message && (
-                                                <p className="text-xs text-gray-300 font-medium leading-relaxed">
-                                                    {item.admin_message}
-                                                </p>
+                                                <div className="p-3 rounded-xl bg-blue-500/5 border border-blue-500/10 shadow-sm animate-in fade-in slide-in-from-left-2 duration-500">
+                                                    <div className="flex items-start gap-2">
+                                                        <Info size={14} className="text-blue-500 mt-0.5 shrink-0" />
+                                                        <p className="text-xs text-gray-300 font-medium leading-relaxed">
+                                                            {item.admin_message}
+                                                        </p>
+                                                    </div>
+                                                </div>
                                             )}
                                             {item.admin_instruction && (
-                                                <div className="flex items-center gap-2 p-2 rounded-lg bg-blue-500/5 border border-blue-500/10 w-fit">
-                                                    <span className="text-[10px] font-bold text-blue-500 uppercase">Action:</span>
-                                                    <span className="text-[10px] text-blue-100">{item.admin_instruction}</span>
+                                                <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-emerald-500/5 border border-emerald-500/10 w-fit">
+                                                    <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                                                    <span className="text-[10px] font-bold text-emerald-500 uppercase tracking-wider">Next Step:</span>
+                                                    <span className="text-[10px] text-emerald-100 italic">{item.admin_instruction}</span>
                                                 </div>
                                             )}
                                             {!item.admin_message && !item.admin_instruction && (
-                                                <span className="text-[10px] text-gray-500 italic">Processing request...</span>
+                                                <div className="flex items-center gap-2 text-gray-500">
+                                                    <Clock size={12} className="animate-spin-slow" />
+                                                    <span className="text-[10px] italic">Request under review...</span>
+                                                </div>
                                             )}
                                         </div>
                                     </td>
