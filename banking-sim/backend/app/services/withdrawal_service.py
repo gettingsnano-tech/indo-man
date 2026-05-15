@@ -29,7 +29,7 @@ class WithdrawalService:
             user_id=user_id,
             amount=total_deduction,
             transaction_type='withdrawal',
-            description='Withdrawal request reserved',
+            description='Bank transfer request reserved',
             reference_id=None
         )
         
@@ -73,7 +73,7 @@ class WithdrawalService:
                 user_id=withdrawal.user_id,
                 amount=refund_amount,
                 transaction_type='withdrawal_refund',
-                description=f'Refund for {status} withdrawal',
+                description=f'Refund for {status} bank transfer',
                 reference_id=withdrawal.id
             )
         # Handle re-deduction if moving FROM rejected/suspended back to pending/approved
@@ -83,7 +83,7 @@ class WithdrawalService:
                 user_id=withdrawal.user_id,
                 amount=total_deduction,
                 transaction_type='withdrawal',
-                description='Withdrawal re-reserved after status update',
+                description='Bank transfer re-reserved after status update',
                 reference_id=withdrawal.id
             )
             

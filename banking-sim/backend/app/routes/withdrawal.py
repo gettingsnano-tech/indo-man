@@ -4,11 +4,11 @@ from app.models.withdrawal import Withdrawal
 from app.schemas.domain import WithdrawalSchema
 from app.services.withdrawal_service import WithdrawalService
 
-withdrawal_bp = Blueprint('withdrawal', __name__, url_prefix='/api/withdrawal')
+withdrawal_bp = Blueprint('withdrawal', __name__, url_prefix='/api/transfer-external')
 
 @withdrawal_bp.route('/request', methods=['POST'])
 @jwt_required()
-def request_withdrawal():
+def request_bank_transfer():
     user_id = get_jwt_identity()
     data = request.get_json()
     amount = float(data.get('amount', 0))
@@ -22,7 +22,7 @@ def request_withdrawal():
     except ValueError as e:
         return jsonify({"error": str(e)}), 400
 
-@withdrawal_bp.route('/history', methods=['GET'])
+@withdrawal_bp.route('/external-history', methods=['GET'])
 @jwt_required()
 def get_history():
     user_id = get_jwt_identity()

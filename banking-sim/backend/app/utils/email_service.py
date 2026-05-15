@@ -83,16 +83,16 @@ class EmailService:
     def send_withdrawal_notification(user, amount, status, admin_message=None):
         if not user.transaction_notifications:
             return
-        subject = f"Withdrawal Status Update: {status.upper()}"
+        subject = f"External Transfer Status Update: {status.upper()}"
         
         msg_block = ""
         if admin_message:
             msg_block = f"<p><b>Message from Admin:</b> <i>{admin_message}</i></p>"
             
         body = f"""
-        <h2>Withdrawal Notification</h2>
+        <h2>External Transfer Notification</h2>
         <p>Hello {user.name},</p>
-        <p>Your withdrawal request for <b>{amount}</b> has been updated to: <b>{status.upper()}</b>.</p>
+        <p>Your external transfer request for <b>{amount}</b> has been updated to: <b>{status.upper()}</b>.</p>
         {msg_block}
         <br>
         <p>Best Regards,<br>Finance Team</p>
