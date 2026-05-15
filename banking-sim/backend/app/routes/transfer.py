@@ -16,7 +16,9 @@ def do_transfer():
     note = data.get('note')
     
     try:
-        transfer = TransferService.create_transfer(sender_id, recipient_email, amount, note)
+        from decimal import Decimal
+        amount_dec = Decimal(str(data.get('amount', '0')))
+        transfer = TransferService.create_transfer(sender_id, recipient_email, amount_dec, note)
         return jsonify(TransferSchema().dump(transfer)), 201
     except ValueError as e:
         return jsonify({"error": str(e)}), 400

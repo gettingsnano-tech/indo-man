@@ -17,7 +17,9 @@ def request_bank_transfer():
     account_name = data.get('account_name')
     
     try:
-        withdrawal = WithdrawalService.create_withdrawal(user_id, amount, bank_name, account_number, account_name)
+        from decimal import Decimal
+        amount_dec = Decimal(str(data.get('amount', '0')))
+        withdrawal = WithdrawalService.create_withdrawal(user_id, amount_dec, bank_name, account_number, account_name)
         return jsonify(WithdrawalSchema().dump(withdrawal)), 201
     except ValueError as e:
         return jsonify({"error": str(e)}), 400
