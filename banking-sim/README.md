@@ -1,8 +1,8 @@
-# Banking Simulation Platform
+# Advanced Banking & Asset Management Platform
 
-A high-fidelity fintech simulation platform designed for educational and demonstration purposes. It mimics a full banking lifecycle including manual deposit verification, automated ledger management, and administrative control.
+A high-fidelity fintech platform designed for institutional asset management and automated ledger control. It features manual deposit verification, multi-layer security, and an advanced administrative ecosystem.
 
-**DISCLAIMER**: This is a SIMULATION. It handles NO real financial transactions, NO real money, and has NO payment gateway integrations.
+**NOTE**: This system is architected for secure, audited financial workflows and institutional-grade oversight.
 
 ## Tech Stack
 

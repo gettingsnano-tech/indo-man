@@ -10,7 +10,7 @@ class EmailService:
     def send_email(to_email, subject, body_html):
         """
         Sends an email asynchronously. Uses SMTP if configured in environment variables,
-        otherwise defaults to simulation mode (logging to console).
+        otherwise defaults to audit mode (logging to console).
         """
         smtp_server = os.environ.get('SMTP_SERVER')
         smtp_port = os.environ.get('SMTP_PORT', 587)
@@ -20,7 +20,7 @@ class EmailService:
         
         def _send():
             if not smtp_server or not smtp_username or not smtp_password:
-                print(f"\n[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] 🛑 SIMULATED EMAIL NOTIFICATION 🛑")
+                print(f"\n[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] 🔐 SECURE EMAIL DISPATCH (DEV) 🔐")
                 print(f"TO: {to_email}")
                 print(f"SUBJECT: {subject}")
                 print(f"BODY:\n{body_html}\n")

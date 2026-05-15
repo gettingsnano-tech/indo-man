@@ -93,7 +93,7 @@ export default function AdminDashboard() {
                                 {stats.totalBalance.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                             </div>
                             <p className="text-xs text-gray-400 mt-4 flex items-center gap-2">
-                                <Activity size={12} className="text-emerald-500" /> Aggregate of all active user wallets across the simulation.
+                                <Activity size={12} className="text-emerald-500" /> Aggregate of all active user wallets across the ecosystem.
                             </p>
                         </div>
                     </div>

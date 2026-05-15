@@ -56,7 +56,7 @@ export default function Settings() {
 
     return (
         <div className="max-w-4xl mx-auto space-y-6">
-            <h1 className="text-3xl font-display font-bold">Global Simulation Settings</h1>
+            <h1 className="text-3xl font-display font-bold">Global System Settings</h1>
             
             {success && <div className="bg-[#22C55E]/10 text-[#22C55E] p-4 rounded-lg text-sm font-medium border border-[#22C55E]/20">{success}</div>}
 
